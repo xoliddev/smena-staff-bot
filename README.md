@@ -2,6 +2,8 @@
 
 **English** · [O'zbekcha](README.uz.md)
 
+[![▶ Live demo](https://img.shields.io/badge/%E2%96%B6_Live_demo-xoliddev.github.io-22b8f0?style=for-the-badge)](https://xoliddev.github.io/demos/smena-staff-bot/)
+
 > *Smena* means "shift". A Telegram back-office bot for restaurants and cafés: geofenced check-in/out,
 > advances, payroll and a monthly Excel timesheet.
 

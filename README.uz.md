@@ -2,6 +2,8 @@
 
 [English](README.md) · **O'zbekcha**
 
+[![▶ Jonli demo](https://img.shields.io/badge/%E2%96%B6_Jonli_demo-xoliddev.github.io-22b8f0?style=for-the-badge)](https://xoliddev.github.io/demos/smena-staff-bot/)
+
 > *Smena* — ish navbati. Restoran va kafelar uchun Telegram bot: geolokatsiya orqali keldi-ketdi,
 > avans, ish haqi hisob-kitobi va oylik Excel tabel.
 
