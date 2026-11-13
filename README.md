@@ -7,7 +7,7 @@
 > *Smena* means "shift". A Telegram back-office bot for restaurants and cafés: geofenced check-in/out,
 > advances, payroll and a monthly Excel timesheet.
 
-![tests](https://img.shields.io/badge/tests-29%20passing-brightgreen)
+[![tests](https://github.com/xoliddev/smena-staff-bot/actions/workflows/tests.yml/badge.svg)](https://github.com/xoliddev/smena-staff-bot/actions/workflows/tests.yml)
 ![Python](https://img.shields.io/badge/Python-3.11+-3776AB?logo=python&logoColor=white)
 ![aiogram](https://img.shields.io/badge/aiogram-3.x-26A5E4?logo=telegram&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-asyncpg-4169E1?logo=postgresql&logoColor=white)
