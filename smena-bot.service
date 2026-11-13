@@ -1,0 +1,19 @@
+[Unit]
+Description=Smena - restaurant staff Telegram bot
+After=network.target postgresql.service
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/var/www/smena-bot
+ExecStart=/var/www/smena-bot/venv/bin/python bot.py
+Restart=always
+RestartSec=5
+EnvironmentFile=/var/www/smena-bot/.env
+
+# Loglarni saqlash
+StandardOutput=append:/var/www/smena-bot/logs/bot.log
+StandardError=append:/var/www/smena-bot/logs/bot_error.log
+
+[Install]
+WantedBy=multi-user.target
