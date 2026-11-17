@@ -22,5 +22,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Loyiha fayllarini nusxalash
 COPY . .
 
+# Root huquqisiz ishlash: bot buzilsa ham konteyner ichida root bo'lmaydi
+RUN useradd --create-home --uid 10001 smena && mkdir -p /app/logs && chown -R smena /app/logs
+USER smena
+
 # Botni ishga tushirish
 CMD ["python", "bot.py"]
