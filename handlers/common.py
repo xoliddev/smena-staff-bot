@@ -147,7 +147,7 @@ async def process_app_phone(message: Message, state: FSMContext):
 
     # Faqat raqam va plyus belgilari qolishi uchun tozalash
     digits_only = re.sub(r"[^\d+]", "", phone)
-    if len(re.sub(r"[^\d]", "", digits_only)) < 7:
+    if not 7 <= len(re.sub(r"[^\d]", "", digits_only)) <= 15:
         await message.answer("⚠️ Iltimos, to'g'ri telefon raqam kiriting (masalan: <code>+998901234567</code>):")
         return
 
@@ -181,13 +181,19 @@ async def process_app_role(callback: CallbackQuery, state: FSMContext):
     role_id = int(role_id_str)
 
     role = await db.get_role_by_id(role_id)
-    role_name = role["name"] if role else "Noma'lum"
+    if not role:
+        await callback.answer("Bu lavozim topilmadi.", show_alert=True)
+        return
+    role_name = role["name"]
 
     data = await state.get_data()
     full_name = data.get("full_name") or "Nomzod"
     phone = data.get("phone_number") or ""
     tg_id = callback.from_user.id
     username = callback.from_user.username
+
+    # Bir nomzod qayta-qayta ariza yuborib adminlarni spam qilmasin
+    renotify = not await db.has_recent_pending_application(tg_id, minutes=10)
 
     # Arizani bazaga yozamiz
     app_id = await db.create_or_update_application(
@@ -214,6 +220,9 @@ async def process_app_role(callback: CallbackQuery, state: FSMContext):
         None
     )
     await callback.answer("Arizangiz yuborildi!")
+
+    if not renotify:
+        return
 
     # Barcha adminlarga bildirishnoma yuboramiz
     u_display = f"@{safe_html(username)}" if username else "mavjud_emas"

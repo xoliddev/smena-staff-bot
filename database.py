@@ -510,6 +510,17 @@ async def create_or_update_application(
         """, tg_id, full_name, phone_number, username, selected_role_id, notification_message_id)
 
 
+async def has_recent_pending_application(tg_id: int, minutes: int = 10) -> bool:
+    """Shu nomzodning yaqinda yuborilgan, hali ko'rib chiqilmagan arizasi bormi."""
+    async with pool.acquire() as conn:
+        row = await conn.fetchrow(
+            "SELECT 1 FROM job_applications WHERE tg_id = $1 AND status = 'pending' "
+            "AND created_at > CURRENT_TIMESTAMP - make_interval(mins => $2)",
+            tg_id, minutes,
+        )
+        return row is not None
+
+
 async def get_application_by_id(app_id: int) -> Optional[Dict[str, Any]]:
     """ID orqali arizani oladi."""
     async with pool.acquire() as conn:
