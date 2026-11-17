@@ -980,7 +980,7 @@ async def remove_admin(tg_id: int) -> bool:
     if tg_id in SUPERADMINS:
         return False
     async with pool.acquire() as conn:
-        res = await conn.execute("DELETE FROM admins WHERE tg_id = $1", tg_id)
+        res = await conn.execute("DELETE FROM admins WHERE tg_id = $1 AND role <> 'superadmin'", tg_id)
         return "DELETE 1" in res
 
 

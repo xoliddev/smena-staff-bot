@@ -203,6 +203,9 @@ async def cb_admins_menu(callback: CallbackQuery):
 @router.callback_query(F.data == "add_admin_start")
 async def cb_add_admin_start(callback: CallbackQuery, state: FSMContext):
     """Yangi admin Telegram ID sini so'rash."""
+    if not await db.is_superadmin(callback.from_user.id):
+        await callback.answer("Adminlarni faqat Superadmin boshqara oladi!", show_alert=True)
+        return
     await remember_menu(state, callback.message)
     await edit_menu(
         callback.message,
@@ -217,6 +220,9 @@ async def cb_add_admin_start(callback: CallbackQuery, state: FSMContext):
 @router.message(SettingsStates.waiting_for_new_admin_id)
 async def process_new_admin_id(message: Message, state: FSMContext):
     """Admin ID sini qabul qilish va ismini so'rash."""
+    if not await db.is_superadmin(message.from_user.id):
+        await state.clear()
+        return
     clean_id = (message.text or "").strip()
     if not clean_id.isdigit():
         await message.answer("⚠️ Iltimos faqat sonlardan iborat Telegram ID kiriting:")
@@ -233,7 +239,13 @@ async def process_new_admin_id(message: Message, state: FSMContext):
 @router.message(SettingsStates.waiting_for_new_admin_name)
 async def process_new_admin_name(message: Message, state: FSMContext):
     """Admin ismini qabul qilib saqlash."""
-    name = (message.text or "").strip()
+    if not await db.is_superadmin(message.from_user.id):
+        await state.clear()
+        return
+    name = (message.text or "").strip()[:255]
+    if len(name) < 2:
+        await message.answer("⚠️ Iltimos, adminning ism va familiyasini kiriting:")
+        return
     data = await state.get_data()
     tg_id = data["new_admin_tg_id"]
     await db.add_admin(tg_id=tg_id, full_name=name, role="admin")
@@ -247,6 +259,9 @@ async def process_new_admin_name(message: Message, state: FSMContext):
 @router.callback_query(F.data.startswith("del_admin_"))
 async def cb_del_admin(callback: CallbackQuery):
     """Adminni o'chirish."""
+    if not await db.is_superadmin(callback.from_user.id):
+        await callback.answer("Adminlarni faqat Superadmin boshqara oladi!", show_alert=True)
+        return
     tg_id = int(callback.data.replace("del_admin_", ""))
     success = await db.remove_admin(tg_id)
 
